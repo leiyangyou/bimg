@@ -82,6 +82,7 @@ type Color struct {
 
 type Watermark struct {
 	Width       int
+  LineSpacing int
 	DPI         int
 	Margin      int
 	Opacity     float32

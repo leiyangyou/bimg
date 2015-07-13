@@ -18,6 +18,7 @@ typedef struct {
 
 typedef struct {
 	int    Width;
+    int    LineSpacing;
 	int    DPI;
 	int    Margin;
 	int    NoReplicate;
@@ -254,6 +255,7 @@ vips_watermark(VipsImage *in, VipsImage **out, WatermarkTextOptions *to, Waterma
 			"dpi", o->DPI,
 			"font", to->Font,
             "align", VIPS_ALIGN_CENTRE,
+            "linespacing", o->LineSpacing,
 			NULL) ||
 		vips_linear1(t[1], &t[2], o->Opacity, 0.0, NULL) ||
 		vips_cast(t[2], &t[3], VIPS_FORMAT_UCHAR, NULL) ||
