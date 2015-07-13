@@ -230,7 +230,7 @@ vips_watermark_replicate(VipsImage *orig, VipsImage *in, VipsImage **out)
 			1 + orig->Xsize / in->Xsize,
 			1 + orig->Ysize / in->Ysize, NULL) ||
 		vips_crop(cache, out, 0, 0, orig->Xsize, orig->Ysize, NULL)
-	) {
+	) 	{
 		g_object_unref(cache);
 		return 1;
 	}
@@ -253,16 +253,23 @@ vips_watermark(VipsImage *in, VipsImage **out, WatermarkTextOptions *to, Waterma
 			"width", o->Width,
 			"dpi", o->DPI,
 			"font", to->Font,
+            "align", VIPS_ALIGN_CENTRE,
 			NULL) ||
 		vips_linear1(t[1], &t[2], o->Opacity, 0.0, NULL) ||
 		vips_cast(t[2], &t[3], VIPS_FORMAT_UCHAR, NULL) ||
-		vips_embed(t[3], &t[4], 100, 100, t[3]->Xsize + o->Margin, t[3]->Ysize + o->Margin, NULL)
+		vips_embed(t[3],
+				   &t[4],
+				   (t[0]->Xsize - t[3]->Xsize - 0)/2,
+				   (t[0]->Ysize - t[3]->Ysize - 0)/2,
+				   t[0]->Xsize, t[0]->Ysize, NULL)
 		) {
 		g_object_unref(base);
 		return 1;
 	}
 
 	// Replicate if necessary
+    //
+    /*
 	if (o->NoReplicate != 1) {
 		VipsImage *cache = vips_image_new();
 		if (vips_watermark_replicate(t[0], t[4], &cache)) {
@@ -272,7 +279,7 @@ vips_watermark(VipsImage *in, VipsImage **out, WatermarkTextOptions *to, Waterma
 		}
 		g_object_unref(t[4]);
 		t[4] = cache;
-	}
+	}*/
 
 	// Make the constant image to paint the text with.
 	if (
